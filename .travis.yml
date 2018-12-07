@@ -1,0 +1,15 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t dyfer92/react-test -f Dockerfile.dev ./client/Dockerfile.dev ./client
+
+script:
+  - docker run dyfer92/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t dyfer92/multi-client ./client
+  - docker build -t dyfer92/multi-nginx ./nginx
+  - docker build -t dyfer92/multi-server ./server
+  - docker build -t dyfer92/multi-worker ./worker
